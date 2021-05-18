@@ -24,10 +24,6 @@ const sendRequest = async (uri, method = 'GET', body) => {
 };
 
 export const deliveryApi = {
-  add: (data) => {
-    sendRequest('/delivery', 'POST', data);
-  },
-  getAll: () => {
-    return sendRequest('/delivery');
-  },
+  add: (data) => sendRequest('/delivery', 'POST', data),
+  getAll: () => sendRequest('/delivery'),
 };

@@ -3,22 +3,26 @@ import Layout from './components/layout/Layout';
 import AddDelivery from './pages/AddDelivery';
 import Deliveries from './pages/Deliveries';
 import NotFound from './pages/NotFound';
+import LoadingMask from './components/UI/LoadingMask';
 
 function App() {
   return (
-    <Layout>
-      <Switch>
-        <Route exact path="/">
-          <Deliveries />
-        </Route>
-        <Route exact path="/deliveries/add">
-          <AddDelivery />
-        </Route>
-        <Route path="*">
-          <NotFound />
-        </Route>
-      </Switch>
-    </Layout>
+    <>
+      <LoadingMask />
+      <Layout>
+        <Switch>
+          <Route exact path="/">
+            <Deliveries />
+          </Route>
+          <Route exact path="/deliveries/add">
+            <AddDelivery />
+          </Route>
+          <Route path="*">
+            <NotFound />
+          </Route>
+        </Switch>
+      </Layout>
+    </>
   );
 }
 
