@@ -5,49 +5,35 @@ import { REQUEST_STATUSES } from '../constants';
 import { uiActions } from '../store/ui-slice';
 
 const useRequest = (requestFn, useLoadingMask = true, immidiate = false) => {
-  // const [requestState, setRequestState] = useState({
-  //   status: immidiate ? REQUEST_STATUSES.PENDING : null,
-  //   data: null,
-  //   error: null,
-  // });
-
-  const [data, setData] = useState();
-  const [error, setError] = useState();
-  const [status, setStatus] = useState(
-    immidiate ? REQUEST_STATUSES.PENDING : null
-  );
+  const [requestState, setRequestState] = useState({
+    status: immidiate ? REQUEST_STATUSES.PENDING : null,
+    data: null,
+    error: null,
+  });
 
   const dispatch = useDispatch();
 
   const sendRequest = useCallback(
     async (...params) => {
-      // setRequestState({
-      //   status: REQUEST_STATUSES.PENDING,
-      //   data: null,
-      //   error: null,
-      // });
-
-      setStatus(REQUEST_STATUSES.PENDING);
-      setError(null);
-      setData(null);
+      setRequestState({
+        status: REQUEST_STATUSES.PENDING,
+        data: null,
+        error: null,
+      });
 
       let result;
       try {
         const data = await requestFn(...params);
         result = { data, error: null, status: REQUEST_STATUSES.COMPLETED };
-        setData(data);
-        setStatus(REQUEST_STATUSES.COMPLETED);
       } catch (error) {
         result = {
           data: null,
           error: error.message,
           status: REQUEST_STATUSES.ERROR,
         };
-        setError(error.messgae);
-        setStatus(REQUEST_STATUSES.ERROR);
       }
 
-      // setRequestState(result);
+      setRequestState(result);
       return result;
     },
     [requestFn]
@@ -57,14 +43,13 @@ const useRequest = (requestFn, useLoadingMask = true, immidiate = false) => {
     if (useLoadingMask) {
       dispatch(
         uiActions.showLoadingMask({
-          show: status === REQUEST_STATUSES.PENDING,
-          // show: requestState.status === REQUEST_STATUSES.PENDING,
+          show: requestState.status === REQUEST_STATUSES.PENDING,
         })
       );
     }
-  }, [dispatch, useLoadingMask, status]);
+  }, [dispatch, useLoadingMask, requestState]);
 
-  return { sendRequest, data, error, status };
+  return { sendRequest, ...requestState };
 };
 
 export default useRequest;

@@ -1,7 +1,7 @@
 const BASE_DOMAIN = 'http://localhost:4000';
 const ERROR_MSG = 'Error while sending request.';
 
-const sendRequest = async (uri, method = 'GET', body) => {
+export const sendRequest = async (uri, method = 'GET', body) => {
   const requestConfig = {
     method,
     headers: {
@@ -9,7 +9,7 @@ const sendRequest = async (uri, method = 'GET', body) => {
     },
   };
 
-  if ((method === 'POST' || method === 'PUT') && body) {
+  if (method !== 'GET' && body) {
     requestConfig.body = JSON.stringify(body);
   }
 
@@ -17,7 +17,7 @@ const sendRequest = async (uri, method = 'GET', body) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || ERROR_MSG);
+    throw new Error(data.statusText || ERROR_MSG);
   }
 
   return data;
@@ -25,5 +25,13 @@ const sendRequest = async (uri, method = 'GET', body) => {
 
 export const deliveryApi = {
   add: (data) => sendRequest('/delivery', 'POST', data),
-  getAll: () => sendRequest('/delivery'),
+  getAll: async () => {
+    const result = await sendRequest('/delivery');
+    result.forEach((delivery) => {
+      delivery.id = delivery.delivery_id;
+      delete delivery.delivery_id;
+    });
+
+    return result;
+  },
 };
