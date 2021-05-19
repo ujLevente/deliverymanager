@@ -58,6 +58,7 @@ const DeliveriesTable = () => {
   const { orderBy, order, page, rowsPerPage } = useSelector(
     (state) => state.delivery.table
   );
+
   const getProcessedRows = () => {
     let processedRows = deliveries.slice(
       page * rowsPerPage,

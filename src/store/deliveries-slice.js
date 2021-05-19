@@ -29,7 +29,7 @@ const initialState = deliveriesAdapter.getInitialState({
     order: 'asc',
     page: 0,
     rowsPerPage: 5,
-    changed: [],
+    changed: {},
   },
 });
 
@@ -38,16 +38,10 @@ const deliveriesSlice = createSlice({
   initialState,
   reducers: {
     setTable(state, action) {
-      const changed = [];
-
       for (const [key, value] of Object.entries(action.payload)) {
-        if (state.table.hasOwnProperty(key)) {
-          changed.push(key);
-          state.table[key] = value;
-        }
+        state.table.changed[key] = value;
+        state.table[key] = value;
       }
-
-      state.table.changed = changed;
     },
   },
   extraReducers: (builder) => {
@@ -67,7 +61,7 @@ const deliveriesSlice = createSlice({
 });
 
 export const deliveryActions = deliveriesSlice.actions;
-console.log(deliveryActions.setTableOrderBy);
+
 export const { selectAll: selectAllDeliveries } =
   deliveriesAdapter.getSelectors((state) => state.delivery);
 

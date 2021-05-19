@@ -1,31 +1,67 @@
-import { IconButton, Popover } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  makeStyles,
+  Popover,
+} from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import React from 'react';
+import React, { useState } from 'react';
+
+const useStyles = makeStyles((theme) => ({
+  popoverButton: {
+    textTransform: 'capitalize',
+  },
+}));
 
 const TableOptions = ({ id }) => {
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState();
+  const open = !!anchorEl;
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleAddFavourite = () => {
+    handlePopoverClose();
+  };
+
   return (
     <div>
-      <IconButton>
+      <IconButton onClick={handlePopoverOpen}>
         <MoreVertIcon />
       </IconButton>
-      {/* <Popover
+      <Popover
         id={id}
         open={open}
         anchorEl={anchorEl}
-        onClose={handleClose}
+        onClose={handlePopoverClose}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
+          vertical: 'center',
+          horizontal: 'left',
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
+          vertical: 'center',
+          horizontal: 'right',
         }}
       >
-        <Typography className={classes.typography}>
-          The content of the Popover.
-        </Typography>
-      </Popover> */}
+        <Box width="150px" display="flex" flexDirection="column">
+          <Button
+            onClick={handleAddFavourite}
+            className={classes.popoverButton}
+          >
+            Add favourite
+          </Button>
+          <Divider />
+          <Button className={classes.popoverButton}>Delete</Button>
+        </Box>
+      </Popover>
     </div>
   );
 };
